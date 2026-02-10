@@ -1,0 +1,87 @@
+{
+  "name": "分镜导演（自动工作流）",
+  "version": "v1",
+  "trigger_phrases": ["我要做分镜", "分镜导演", "拆分镜", "根据剧本生成分镜"],
+  "one_question_per_turn": true,
+  "defaults": {
+    "model": "nano-banana-pro-preview",
+    "reference_strategy": "B",
+    "version_strategy": "C",
+    "batch_review": true
+  },
+  "steps": [
+    {
+      "id": "confirm_project_name",
+      "ask": "本次项目名称是什么？（中文即可）",
+      "saves_to": "02_设定/项目配置.json:project_name"
+    },
+    {
+      "id": "confirm_aspect_ratio",
+      "ask": "本项目分镜图画幅是多少？请给比例或像素（例：16:9 / 1080x1920 / 2048x858）。",
+      "saves_to": "02_设定/项目配置.json:aspect_ratio"
+    },
+    {
+      "id": "init_project",
+      "auto": true,
+      "creates": [
+        "01_剧本",
+        "02_设定",
+        "03_参考图",
+        "04_镜头表",
+        "05_分镜图",
+        "06_排版输出"
+      ]
+    },
+    {
+      "id": "ask_upload_script_segment",
+      "ask": "现在可以上传/粘贴第 1 段剧本吗？（可以分段发）",
+      "saves_to": "01_剧本/"
+    },
+    {
+      "id": "ask_columns_customize",
+      "ask": "本项目文字分镜表列字段是否沿用默认全字段？如需增删，请指出要删/要加哪些列。",
+      "reference": "fields.md"
+    },
+    {
+      "id": "generate_text_shotlist",
+      "auto": true,
+      "outputs": ["04_镜头表/文字分镜表.xlsx", "04_镜头表/shotlist.json"]
+    },
+    {
+      "id": "freeze_text_review",
+      "ask": "请审查文字分镜表。要修改哪些镜头/字段？（可合并/拆分/改景别机位运镜/补台词动作）"
+    },
+    {
+      "id": "ask_generation_range",
+      "ask": "这次要生成哪些镜头的图片？例如 01-03 / 05,07 / 全部 / 仅新增。"
+    },
+    {
+      "id": "generate_references",
+      "auto": true,
+      "outputs": ["03_参考图/"]
+    },
+    {
+      "id": "freeze_reference_review",
+      "ask": "参考图是否通过？哪些需要重做/调整设定？"
+    },
+    {
+      "id": "generate_story_frames",
+      "auto": true,
+      "outputs": ["05_分镜图/"]
+    },
+    {
+      "id": "freeze_frames_review",
+      "ask": "本次生成的镜头是否通过？不通过的镜头号与原因是什么？"
+    },
+    {
+      "id": "embed_frames_into_xlsx",
+      "auto": true,
+      "outputs": ["04_镜头表/文字分镜表.xlsx"]
+    },
+    {
+      "id": "final_export_optional",
+      "ask": "是否生成最终可视化分镜（PDF/PPTX）？如果需要：PDF、PPTX 还是两者？每页几格（8/12/16）？显示哪些文字字段？",
+      "outputs": ["06_排版输出/"]
+    }
+  ]
+}
