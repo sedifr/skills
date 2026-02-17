@@ -4,62 +4,35 @@
 
 ## 当前技能
 
-- `storyboard-dialog-skill-audit/` (`storyboard-dialog-skill-audit`)
-  - 目标: 把“分镜协作对话”转成结构化能力复盘
-  - 产出: 已体现技能、待加强技能、下一轮可执行动作
-  - 方法: 仅基于当前会话证据, 避免空泛夸奖和臆测
+- `storyboard-director/` (`storyboard-director`)
+  - 目标: 把剧本稳定转成可执行分镜流程
+  - 流程: 文字分镜冻结 -> 参考图冻结 -> 分镜图分批生成与审片 -> 回填/嵌图 -> 按需导出
+  - 特点: one-question-per-turn、先文字后出图、强制一致性检查与成本控制
 
 ## 适用场景
 
 当用户提到以下意图时使用:
 
-- "我在这段分镜对话里做了什么技能/能力?"
-- "帮我复盘分镜协作能力"
-- "把当前对话能力沉淀为技能清单"
-- "使用 storyboard-dialog-skill-audit"
+- "我要做分镜"
+- "帮我拆分镜"
+- "把这段剧本做成分镜"
+- "分镜导演"
 
-不适用场景:
+## 关键规则
 
-- 用户想要的是“系统工具能力列表”, 而非“用户自身对话能力复盘”
-- 用户请求直接生成分镜图/镜头表, 不是复盘协作能力
-
-## 复盘维度与判定
-
-默认优先按以下维度提炼:
-
-- 需求澄清
-- 目标对齐
-- 镜头语言意识
-- 节奏控制
-- 审片标准
-- 协作反馈质量
-
-成熟度分层:
-
-- 已稳定: 多次出现, 且表达清晰、可复用
-- 已出现但不稳定: 有表现, 但偶发或不成体系
-- 尚未体现: 当前会话缺少直接证据
-
-## 输出格式（建议）
-
-每次复盘建议保持以下三段结构:
-
-1. 已体现技能
-2. 待加强技能
-3. 下一轮可执行动作（最多 3 条）
-
-每个技能点都应包含:
-
-- 一句话定义
-- 对话证据（原话或关键行为）
-- 判断理由（为什么归到该成熟度）
+- 每回合只问一个关键问题。
+- 文字分镜未通过前, 不开始生图。
+- 参考图未通过前, 不开始分镜帧图。
+- 每次生图前必须先确认生成范围（例如 `01-03` / `05,07` / `全部` / `仅新增`）。
+- 每次生图前固定 6 轮复盘。
+- 每次出图后固定做现实一致性检查并记录问题闭环。
 
 ## 快速安装
 
-安装单个技能到全局 (推荐):
+安装到全局技能目录:
 
 ```bash
-npx skills add https://github.com/sedifr/skills --skill storyboard-dialog-skill-audit -g -y
+npx skills add https://github.com/sedifr/skills --skill storyboard-director -g -y
 ```
 
 查看已安装技能:
@@ -73,29 +46,25 @@ npx skills list -g
 - `-g`: 安装到全局技能目录 (通常为 `~/.agents/skills/`)
 - `-y`: 跳过交互确认
 
-## 目录结构
+## 技能结构
 
 ```text
-storyboard-dialog-skill-audit/
+storyboard-director/
   SKILL.md
-  agents/
-    openai.yaml
+  references/
+    fields.md
+    state-machine.json
 ```
 
-字段说明:
+文件说明:
 
-- `SKILL.md`: 技能主说明, 含触发描述与执行流程
-- `agents/openai.yaml`: UI 展示元信息 (`display_name` / `short_description` / `default_prompt`)
-
-## 维护建议
-
-- 每次优化复盘口径后, 同步更新 `SKILL.md` 与本 README
-- 若新增维度或评分方法, 优先在 `SKILL.md` 里定义“证据规则”
-- 提交前确保技能结构可通过本地校验脚本
+- `SKILL.md`: 技能触发描述、核心规则、流程总览
+- `references/fields.md`: 文字分镜表字段清单（默认列 + 可选列）
+- `references/state-machine.json`: 逐步状态机（提问节点、自动步骤、冻结审查点）
 
 ## 发布说明
 
-只要仓库可访问且用户通过 `npx skills add ...` 安装, 即可被 Skills CLI 生态使用; 通常不需要额外手工上传网站。
+只要仓库可访问且用户通过 `npx skills add ...` 安装, 即可在 Skills CLI 生态中使用; 通常不需要额外手工上传网站。
 
 ## 许可证
 

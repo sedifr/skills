@@ -1,4 +1,0 @@
-interface:
-  display_name: "分镜能力复盘"
-  short_description: "从分镜对话提炼用户能力"
-  default_prompt: "请基于我们这段分镜对话，输出我的能力复盘：已体现技能、证据、待加强项和下一轮动作。"
