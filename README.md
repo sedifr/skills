@@ -1,12 +1,12 @@
 # skills (自建)
 
-这个仓库用于存放自建 Skill, 以便通过 Skills CLI (npx skills) 安装到多种支持 Skills 的 Agent/客户端中使用。
+这个仓库用于存放自建 Skill, 以便通过 Skills CLI (`npx skills`) 安装到多种支持 Skills 的 Agent/客户端中使用。
 
 ## 包含的技能
 
-- `storyboard-director/` (storyboard-director)
-  - 用途: 把剧本拆成可执行的分镜工作流 (文字镜头表 -> 审查冻结 -> 参考图 -> 审查冻结 -> 分镜帧 -> 审查冻结 -> 回填/嵌图 -> 可选导出)
-  - 特点: one-question-per-turn, 先文字后出图, 分批生成/审片, 控制一致性与成本
+- `storyboard-dialog-skill-audit/` (`storyboard-dialog-skill-audit`)
+  - 用途: 复盘分镜协作对话, 识别用户已体现的能力动作并沉淀为技能画像
+  - 特点: 基于证据提炼、能力分层评估(稳定/不稳定/未体现)、输出可执行改进动作
 
 ## 环境要求
 
@@ -18,7 +18,7 @@
 安装单个技能到全局 (推荐):
 
 ```bash
-npx skills add https://github.com/sedifr/skills --skill storyboard-director -g -y
+npx skills add https://github.com/sedifr/skills --skill storyboard-dialog-skill-audit -g -y
 ```
 
 查看已安装的全局技能:
@@ -38,10 +38,10 @@ npx skills list -g
 
 建议的触发说法:
 
-- "我要做分镜"
-- "帮我拆分镜"
-- "把这段剧本做成分镜"
-- "使用 storyboard-director 按流程执行"
+- "我在这段分镜对话里做了什么技能?"
+- "帮我复盘分镜协作能力"
+- "把当前对话能力沉淀为技能清单"
+- "使用 storyboard-dialog-skill-audit"
 
 ## 技能目录结构约定
 
@@ -50,7 +50,9 @@ npx skills list -g
 ```text
 <skill-name>/
   SKILL.md
-  references/
+  agents/
+    openai.yaml
+  references/   (可选)
     ...
   scripts/      (可选)
   assets/       (可选)
